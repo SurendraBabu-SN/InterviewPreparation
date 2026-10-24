@@ -47,33 +47,33 @@ namespace WebAPIPreparation.Controllers
             return Ok(response);
         }
 
-        //[HttpPost("refresh-token")]
-        //public IActionResult RefreshToken(
-        //    RefreshTokenRequest request)
-        //{
-        //    // Get user by Refresh Token from DB
+        [HttpPost("refresh-token")]
+        public IActionResult RefreshToken(
+            RefreshTokenRequest request)
+        {
+            // Get user by Refresh Token from DB
 
-        //    bool validRefreshToken = true;
+            bool validRefreshToken = true;
 
-        //    if (!validRefreshToken)
-        //    {
-        //        return Unauthorized();
-        //    }
+            if (!validRefreshToken)
+            {
+                return Unauthorized();
+            }
 
-        //    var newAccessToken =
-        //        _jwtService.GenerateAccessToken(
-        //            "admin",
-        //            "Admin");
+            var newAccessToken =
+                _jwtService.GenerateAccessToken(
+                    "admin",
+                    "Admin");
 
-        //    var newRefreshToken =
-        //        _jwtService.GenerateRefreshToken();
+            var newRefreshToken =
+                _jwtService.GenerateRefreshToken();
 
-        //    return Ok(new LoginResponse
-        //    {
-        //        AccessToken = newAccessToken,
-        //        RefreshToken = newRefreshToken,
-        //        ExpiresAt = DateTime.UtcNow.AddMinutes(30)
-        //    });
-        //}
+            return Ok(new LoginResponse
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(30)
+            });
+        }
     }
 }

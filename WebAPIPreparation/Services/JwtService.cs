@@ -6,7 +6,14 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace WebAPIPreparation.Services
 {
-    public class JwtService
+
+    public interface IJwtService
+    {
+        string GenerateAccessToken(string userName, string role);
+        string GenerateRefreshToken();
+    }
+
+    public class JwtService: IJwtService
     {
         private readonly IConfiguration _configuration;
 
