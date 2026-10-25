@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +8,7 @@ using WebAPIPreparation.Auth;
 using WebAPIPreparation.Models;
 using WebAPIPreparation.Services;
 using WebAPIPreparation.Utility;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -89,6 +90,9 @@ builder.Services.AddAuthorization(options =>
         .RequireAuthenticatedUser().Build();
 });
 
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();   // skip if already added
+builder.Services.AddScoped<IUserService, UserService>();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -96,6 +100,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddProblemDetails();                              // ← add this
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddScoped<ICustomerService, CustomerService>();

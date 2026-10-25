@@ -17,14 +17,26 @@ namespace WebAPIPreparation.Controllers
 
         [HttpPost]
         [Authorize(Policy = Permissions.CustomersEdit)]
-        public async Task<IActionResult> Create(CreateCustomerRequest req, CancellationToken ct) { /* ... */ }
+        public async Task<IActionResult> CreateAsync(CreateCustomerRequest req, CancellationToken ct) {
+            
+            await service.CreateAsync(req, ct);
+            return Ok();
+            
+            /* ... */ }
 
         [HttpPut("{id:int}")]
         [Authorize(Policy = Permissions.CustomersEdit)]
-        public async Task<IActionResult> Update(int id, UpdateCustomerRequest req, CancellationToken ct) { /* ... */ }
+        public async Task<IActionResult> Update(int id, UpdateCustomerRequest req, CancellationToken ct) {
+            await service.UpdateAsync(id, req, ct);
+            return Ok();
+            /* ... */ }
 
         [HttpDelete("{id:int}")]
         [Authorize(Policy = Permissions.CustomersDelete)]
-        public async Task<IActionResult> Delete(int id, CancellationToken ct) { /* ... */ }
+        public async Task<IActionResult> Delete(int id, CancellationToken ct) { 
+            
+            await service.DeleteAsync(id, ct);
+            return Ok();
+            /* ... */ }
     }
 }
