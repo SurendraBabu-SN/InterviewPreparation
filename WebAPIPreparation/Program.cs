@@ -18,8 +18,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>(); // here  class with default contructor 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+//builder.Services.AddScoped<ICountryService, CountryService>();
+//builder.Services.AddScoped<IStateService, StateService>();
 
 
 builder.Services.AddSwaggerGen(options =>
@@ -57,10 +60,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     options.TokenValidationParameters =
         new TokenValidationParameters
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
+            ValidateIssuer = true, // who created the token
+            ValidateAudience = true, //who the token is for
+            ValidateLifetime = true, //exp (expiry): is it still valid?
+            ValidateIssuerSigningKey = true, //was it signed with your key?
 
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
@@ -95,7 +98,7 @@ builder.Services.AddAuthorization(options =>
 
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(); // code generator for swagger ui with json
 
 // Registering services for AppDB context created by EF Core
 builder.Services.AddDbContext<AppDbContext>(o =>
@@ -104,9 +107,7 @@ builder.Services.AddDbContext<AppDbContext>(o =>
 builder.Services.AddProblemDetails();                              // ← add this
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-builder.Services.AddScoped<ICustomerService, CustomerService>();
-//builder.Services.AddScoped<ICountryService, CountryService>();
-//builder.Services.AddScoped<IStateService, StateService>();
+
 
 
 var app = builder.Build();
