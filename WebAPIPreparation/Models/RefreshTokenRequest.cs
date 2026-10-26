@@ -1,11 +1,12 @@
-﻿namespace WebAPIPreparation.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WebAPIPreparation.Models
 {
 
 
     public class RefreshTokenRequest
     {
-        public string? AccessToken { get; set; }
-
-        public string? RefreshToken { get; set; }
+        [Required]
+        public string RefreshToken { get; set; } = "";
     }
 }

@@ -4,9 +4,9 @@ namespace WebAPIPreparation.Models
 {
     public class LoginRequest
     {
-        public  string? UserName  { get; set; }
+        [Required]  public  string UserName { get; set; } = "";
+        [Required]  public   string Password { get; set; } = "";
 
-        public  string? Password { get; set; }
     }
 
     /// <summary>Self sign-up: no Role field, so nobody can make themselves Admin.</summary>

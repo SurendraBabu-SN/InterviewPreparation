@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebAPIPreparation.Models;
 using WebAPIPreparation.Services;
 
@@ -7,73 +8,38 @@ namespace WebAPIPreparation.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class AuthController(IAuthService authService) : ControllerBase
     {
-        private readonly JwtService _jwtService;
-
-        public AuthController(JwtService jwtService)
-        {
-            _jwtService = jwtService;
-        }
-
+       
         [HttpPost("login")]
-        public IActionResult Login(LoginRequest request)
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginRequest request, CancellationToken ct)
         {
-            // Database validation example
-
-            if (request.UserName != "admin" ||
-                request.Password != "Admin@123")
-            {
-                return Unauthorized();
-            }
-
-            var accessToken =
-                _jwtService.GenerateAccessToken(
-                    request.UserName,
-                    "Admin");
-
-            var refreshToken =
-                _jwtService.GenerateRefreshToken();
-
-            // Save Refresh Token in DB
-
-            var response = new LoginResponse
-            {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken,
-                ExpiresAt = DateTime.UtcNow.AddMinutes(30)
-            };
+            var response = await authService.LoginAsync(request, ct);
+            if (response is null)
+                return Unauthorized(new { message = "Wrong user name or password." });
 
             return Ok(response);
         }
 
         [HttpPost("refresh-token")]
-        public IActionResult RefreshToken(
-            RefreshTokenRequest request)
+        [AllowAnonymous]
+        public async Task<IActionResult> RefreshToken(RefreshTokenRequest request, CancellationToken ct)
         {
-            // Get user by Refresh Token from DB
+            var response = await authService.RefreshAsync(request.RefreshToken, ct);
+            if (response is null)
+                return Unauthorized(new { message = "Refresh token is invalid or expired. Please log in again." });
 
-            bool validRefreshToken = true;
-
-            if (!validRefreshToken)
-            {
-                return Unauthorized();
-            }
-
-            var newAccessToken =
-                _jwtService.GenerateAccessToken(
-                    "admin",
-                    "Admin");
-
-            var newRefreshToken =
-                _jwtService.GenerateRefreshToken();
-
-            return Ok(new LoginResponse
-            {
-                AccessToken = newAccessToken,
-                RefreshToken = newRefreshToken,
-                ExpiresAt = DateTime.UtcNow.AddMinutes(30)
-            });
+            return Ok(response);
         }
+
+        [HttpPost("logout")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Logout(RefreshTokenRequest request, CancellationToken ct)
+        {
+            await authService.LogoutAsync(request.RefreshToken, ct);
+            return NoContent();
+        }
+
     }
 }
