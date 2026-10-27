@@ -23,34 +23,36 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<Country>(entity =>
         {
+            entity.HasKey(e => e.Id);
             entity.ToTable("Country");
+            entity.Property(e => e.CountryName).HasMaxLength(100);
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Customer__3214EC076C5C43E8");
+            entity.HasKey(e => e.Id);
 
             entity.ToTable("Customer");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.City).HasMaxLength(50);
-            entity.Property(e => e.Country).HasMaxLength(100);
             entity.Property(e => e.CustomerName).HasMaxLength(100);
+            entity.Property(e => e.City).HasMaxLength(50);
+            entity.Property(e => e.State).HasMaxLength(100);
+            entity.Property(e => e.Country).HasMaxLength(100);
             entity.Property(e => e.Pincode)
                 .HasMaxLength(10)
                 .IsFixedLength();
-            entity.Property(e => e.State).HasMaxLength(100);
+           
         });
 
         modelBuilder.Entity<State>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__State__3214EC074309FA3F");
+            // ValueGeneratedNever() removed → EF knows SQL Server creates the Id
+
+            entity.HasKey(e => e.Id);
 
             entity.ToTable("State");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
+                     
             entity.Property(e => e.CountryId).HasColumnName("CountryID");
             entity.Property(e => e.StateName).HasMaxLength(100);
         });

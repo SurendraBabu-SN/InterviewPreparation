@@ -21,8 +21,8 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IAuthService, AuthService>(); // here  class with default contructor 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
-//builder.Services.AddScoped<ICountryService, CountryService>();
-//builder.Services.AddScoped<IStateService, StateService>();
+builder.Services.AddScoped<ICountryService, CountryService>();
+builder.Services.AddScoped<IStateService, StateService>();
 
 
 builder.Services.AddSwaggerGen(options =>
