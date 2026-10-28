@@ -24,6 +24,8 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<Country>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id)
+             .ValueGeneratedOnAdd();      // database generates the Id (IDENTITY)
             entity.ToTable("Country");
             entity.Property(e => e.CountryName).HasMaxLength(100);
 
@@ -32,7 +34,8 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<Customer>(entity =>
         {
             entity.HasKey(e => e.Id);
-
+            entity.Property(e => e.Id)
+            .ValueGeneratedOnAdd();      // database generates the Id (IDENTITY
             entity.ToTable("Customer");
 
             entity.Property(e => e.CustomerName).HasMaxLength(100);
@@ -50,7 +53,8 @@ public partial class AppDbContext : DbContext
             // ValueGeneratedNever() removed → EF knows SQL Server creates the Id
 
             entity.HasKey(e => e.Id);
-
+            entity.Property(e => e.Id)
+            .ValueGeneratedOnAdd();      // database generates the Id (IDENTITY)
             entity.ToTable("State");
                      
             entity.Property(e => e.CountryId).HasColumnName("CountryID");
