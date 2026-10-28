@@ -8,7 +8,7 @@ export default function HomePage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    api.get('/countries')
+    api.get('/Country')
       .then(({ data }) => setCountries(data))
       .catch((err) => setError(getErrorMessage(err)));
   }, []);
